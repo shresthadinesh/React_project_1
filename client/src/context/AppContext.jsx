@@ -6,7 +6,9 @@ import toast from "react-hot-toast";
 export const AppContext = createContext();
 
 export const AppContextProvider = ({ children }) => {
-  const currrency = import.meta.env.VITE_CURRENCY;
+
+  const currency = import.meta.env.VITE_CURRENCY;
+
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [isSeller, setIsSeller] = useState(false);
@@ -33,19 +35,41 @@ export const AppContextProvider = ({ children }) => {
     toast.success("added to cart");
   };
 
+  // Get cart items count
+  const getCartCount = () => {
+    let totalCount = 0;
+    for (const item in cartItems) {
+      totalCount += cartItems[item];
+    }
+    return totalCount;
+  };
+
+  // Get cart total amount
+  const getCartAmount = () => {
+    let totalAmount = 0;
+    for (const item in cartItems) {
+      let itemInfo = products.find((product) => product._id === item);
+      if (cartItems[item] > 0) {
+        totalAmount += itemInfo.offerPrice * cartItems[item];
+      }
+    }
+    return Math.floor(totalAmount * 100) / 100;
+  };
+
   // update Cart Items quantity
-  const updateCartItem = (itemId, quantity)=> {
+  const updateCartItem = (itemId, quantity) => {
     let cartData = structuredClone(cartItems);
     cartData[itemId] = quantity;
-    setCartItems(cartData);    toast.success("Cart Updated");
-  }
+    setCartItems(cartData);
+    toast.success("Cart Updated");
+  };
 
   // Remove product from Cart
   const removeFromCart = (itemId) => {
     let cartData = structuredClone(cartItems);
-    if(cartData[itemId] ){
+    if (cartData[itemId]) {
       cartData[itemId] -= 1;
-      if(cartData[itemId] === 0){
+      if (cartData[itemId] === 0) {
         delete cartData[itemId];
       }
     }
@@ -67,14 +91,16 @@ export const AppContextProvider = ({ children }) => {
     setShowUserLogin,
     products,
     setProducts,
-    currrency,
+    currency,
     addToCart,
     updateCartItem,
     removeFromCart,
     cartItems,
     searchQuery,
-    setSearchQuery
-      };
+    setSearchQuery,
+    getCartCount,
+    getCartAmount,
+  };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };

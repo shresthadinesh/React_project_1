@@ -9,7 +9,8 @@ import ProductCard from "../components/ProductCard";
 
 const ProductDetails = () => {
   const { products, currency, addToCart } = useAppContext();
-  const { navigate } = useNavigate();
+  // const { navigate } = useNavigate();
+  const navigate = useNavigate();
   const { id } = useParams();
 
   const [relatedProducts, setRelatedProducts] = useState([]);
@@ -21,7 +22,7 @@ const ProductDetails = () => {
     if (products.length > 0) {
       let productsCopy = products.slice();
       productsCopy = productsCopy.filter(
-        (item) => product?.category === item.category
+        (item) => product.category === item.category
       );
       setRelatedProducts(productsCopy.slice(0, 5));
     }
@@ -79,12 +80,10 @@ const ProductDetails = () => {
 
             <div className="mt-6">
               <p className="text-gray-500/70 line-through">
-                MRP: {currency}
-                {product.price}
+                MRP: {currency}{product.price}
               </p>
               <p className="text-2xl font-medium">
-                MRP: {currency}
-                {product.offerPrice}
+                MRP: {currency}{product.offerPrice}
               </p>
               <span className="text-gray-500/70">(inclusive of all taxes)</span>
             </div>
@@ -105,8 +104,7 @@ const ProductDetails = () => {
               </button>
               <button
                 onClick={() => {
-                  addToCart(product._id);
-                  navigate("/cart");
+                  addToCart(product._id); navigate("/cart")
                 }}
                 className="w-full py-3.5 cursor-pointer font-medium bg-primary text-white hover:bg-primary-dull transition"
               >
